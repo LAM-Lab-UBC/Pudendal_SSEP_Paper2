@@ -21,13 +21,3 @@ end
 Peak_time = x_roi(max_index);
 Peak_amp = y_roi(max_index)-100;
 close(f1)
-
-f2 = figure;
-plot(times, trial,'-r', 'LineWidth', 1.5)
-set(gca, 'Ydir','reverse')
-hold on
-xlim([-10 100])
-plot(Peak_time, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
-hold off
-
-close(f2)

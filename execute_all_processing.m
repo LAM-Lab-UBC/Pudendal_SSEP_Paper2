@@ -46,11 +46,18 @@ order_trials = randperm(length(allParticipant));
 % Reviewer_3 & 4 day 2
 if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || strcmp(Reviewer_elect, "Reviewer_2") && strcmp(Session_elect, "Day_1") ...
         || strcmp(Reviewer_elect, "Reviewer_3") && strcmp(Session_elect, "Day_2") || strcmp(Reviewer_elect, "Reviewer_4") && strcmp(Session_elect, "Day_2")
-    for i = 1:length(order_trials)
+    for i = 1:length(order_trials) 
         current_index = order_trials(i);
         CzAvg = allParticipant(current_index).Trial.CzAvg;
         times = allParticipant(current_index).Trial.times;
-
+        
+        % Scheduled breaks 
+        if i == 2 || i == length(order_trials)
+            web('https://www.youtube.com/watch?v=9EcjWd-O4jI')
+            pause(221)
+            !taskkill -f -im msedge.exe
+        end
+        
         %Plot the response
         tic;
         figure('units','normalized','outerposition',[0.3 0.3 0.5 0.40])
@@ -155,8 +162,16 @@ end
 if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || strcmp(Reviewer_elect, "Reviewer_2") && strcmp(Session_elect, "Day_2") ...
         || strcmp(Reviewer_elect, "Reviewer_3") && strcmp(Session_elect, "Day_1") || strcmp(Reviewer_elect, "Reviewer_4") && strcmp(Session_elect, "Day_1")
     for i = 1:length(order_trials)
+       
+        % Scheduled breaks 
+        if i == 2 || i == length(order_trials)
+            web('https://www.youtube.com/watch?v=9EcjWd-O4jI')
+            pause(221)
+            !taskkill -f -im msedge.exe
+        end
+        
         current_index = order_trials(i);
-        tic;
+        
 
         CzAvg = allParticipant(current_index).Trial.CzAvg;
         x_tf = allParticipant(current_index).Trial.x_tf;
@@ -175,7 +190,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
         max_vect= c_vector;
         cbar_labels = {'dB';'Power (dB)';'dB';'ITPC';'Power (dB)'};
 
-
+        tic;
         figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96])
         t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
 
