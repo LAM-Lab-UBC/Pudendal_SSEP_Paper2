@@ -1,7 +1,7 @@
 function [Peak_amp, Peak_time] = calcConditionManuTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times)
+    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data)
 trial = CzAvg;
-f1 = figure;
+f1 = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
 t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
 
 % "Phase locked"
@@ -13,6 +13,7 @@ title("Phase locked")
 set(ax1, 'clim', color_edges_PhaseLocked);
 c2 = colorbar;
 colormap("jet");
+xlim([-10 100]);
 c2.Label.String = string(cbar_label_PhaseLocked);
 
 % "ITPC"
@@ -23,8 +24,17 @@ xlabel('Time (ms)')
 title("ITPC")
 set(ax2, 'clim', color_edges_ITPC);
 c4 = colorbar;
+xlim([-10 100]);
 colormap("jet");
 c4.Label.String = string(cbar_label_ITPC)';
+
+% Global Field Potential
+ax3 = nexttile;
+plot(GFP_times, GFP_data,'-k', 'LineWidth', 1.5)
+title("Global Field Potential")
+xlim([-10 100]);
+xlabel('Time (ms)')
+ylabel('Amplitude (µV)')
 
 ax4 = nexttile;
 plot(times, CzAvg,'-r', 'LineWidth', 1.5)

@@ -1,7 +1,7 @@
 function [Peak_amp, Peak_time] = calcConditionManuTime(CzAvg, times, peak)
 trial = CzAvg;
 
-f1 = figure;
+f1 = figure('units','normalized','outerposition',[0.3 0.3 0.5 0.40]);
 plot(times, trial,'-r', 'LineWidth', 1.5)
 set(gca, 'Ydir','reverse')
 hold on
