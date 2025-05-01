@@ -52,7 +52,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
         times = allParticipant(current_index).Trial.times;
         
         % Scheduled breaks 
-        if i == 20 || i == 40
+       if i == 20 || i == 40
             web('https://www.youtube.com/watch?v=9EcjWd-O4jI')
             pause(221)
             !taskkill -f -im msedge.exe
@@ -165,6 +165,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
        
         % Scheduled breaks 
         if i == 20 || i == 40
+        
             web('https://www.youtube.com/watch?v=9EcjWd-O4jI')
             pause(221)
             !taskkill -f -im msedge.exe
