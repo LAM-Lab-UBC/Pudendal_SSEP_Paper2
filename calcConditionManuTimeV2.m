@@ -10,9 +10,7 @@ function [Peak_time, Peak_amp] = calcConditionManuTimeV2(trace_x, trace_y, peak)
     ylim([Y_min Y_max])
     title( {peak,'Use arrow keys to move. Press Enter to select. Esc to quit.'});
 
-
     % Initial index
-
     if strcmp(peak, "P1")
         idx = 451;
     elseif strcmp(peak, "P2")
@@ -24,7 +22,6 @@ function [Peak_time, Peak_amp] = calcConditionManuTimeV2(trace_x, trace_y, peak)
     elseif strcmp(peak, "Onset")
         idx = 401;
     end 
-    
     
     n_points = length(trace_x);
     cursor = plot(trace_x(idx), trace_y(idx), 'ro', 'MarkerSize', 10, 'LineWidth', 2);

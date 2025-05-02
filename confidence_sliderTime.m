@@ -1,5 +1,4 @@
-function [Confidence_val] = confidence_sliderTime(peak, Response_elect,CzAvg, times, Peak_time_times, Peak_amp)
-
+function [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp)
 
 f1 = figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40]);
 plot(times, CzAvg,'-r', 'LineWidth', 1.5)
@@ -7,10 +6,9 @@ set(gca, 'Ydir','reverse')
 hold on
 xlim([-10 100])
 title(peak)
-display(Peak_time_times)
+display(Peak_time)
 display(Peak_amp)
-plot(Peak_time_times, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
-
+plot(Peak_time, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
 
 % Create the figure
 f = figure('Position', [25, 300, 550, 200], ...

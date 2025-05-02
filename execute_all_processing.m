@@ -17,15 +17,15 @@
 % %% Load data
 % % Select the workspace that has all previously processed data
 [filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
-     'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
+    'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
 addpath(inpath);
 inDat = load(filename);
 temp_name = string(fieldnames(inDat));
 inDat = inDat.(temp_name);
 allParticipant = inDat;
 % Note if everyone is working on the same computer we can just set this as
-% a specific path so people do not have to load in the data 
-% Also make sure it is store locally on whatever computure you are using 
+% a specific path so people do not have to load in the data
+% Also make sure it is store locally on whatever computure you are using
 %% Enter information about Reviewer_metrics
 % Select which Reviewer_it is
 ReviewerOpt = ["Reviewer_1" "Reviewer_2" "Reviewer_3" "Reviewer_4"];
@@ -78,7 +78,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
 
         if strcmp(Response_elect, "No")
 
-            [Confidence_val] = confidence_slider(peak, Response_elect);
+            [Confidence_val] = confidence_slider();
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
@@ -103,11 +103,11 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak, Response_elect,CzAvg, times, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
             end
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
 
@@ -122,9 +122,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak, Response_elect,CzAvg, times, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
             end
@@ -141,9 +141,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak, Response_elect,CzAvg, times, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
             end
@@ -160,9 +160,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak, Response_elect,CzAvg, times, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
             end
@@ -179,9 +179,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak, Response_elect,CzAvg, times, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
             end
@@ -289,7 +289,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
         allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
 
         if strcmp(Response_elect, "No")
-            [Confidence_val] = confidence_slider(peak, Response_elect);
+            [Confidence_val] = confidence_slider();
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
@@ -316,12 +316,12 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Response_elect, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
             end
 
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
@@ -340,12 +340,12 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Response_elect, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
             end
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
 
@@ -363,12 +363,12 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Response_elect, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
             end
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
 
@@ -386,10 +386,10 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Response_elect, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
             end
@@ -410,12 +410,12 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Response_elect, Peak_time, Peak_amp);
+                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
             elseif strcmp(Response_elect, "No")
                 peak_response_time = toc;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider(peak, Response_elect);
+                [Confidence_val] = confidence_slider();
             end
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
         end

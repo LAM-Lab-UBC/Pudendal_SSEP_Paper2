@@ -1,6 +1,4 @@
-function [Confidence_val] = confidence_slider(peak, Response_elect)
-
-
+function [Confidence_val] = confidence_slider()
 
 % Create the figure
 f = figure('Position', [25, 400, 550, 200], ...

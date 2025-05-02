@@ -1,5 +1,5 @@
-function [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Response_elect, Peak_time_times, Peak_amp)
+function [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp)
 
 
 
@@ -51,8 +51,7 @@ xlabel('Time (ms)')
 ylabel('Amplitude (µV)')
 set(ax4, 'Ydir','reverse', 'YColor', 'k')
 hold(ax4, 'on');
-plot(Peak_time_times, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
-
+plot(Peak_time, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
 
 % Create the figure
 f = figure('Position', [25, 300, 550, 200], ...
