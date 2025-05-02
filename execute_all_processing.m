@@ -17,7 +17,7 @@
 % %% Load data
 % % Select the workspace that has all previously processed data
 % [filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
-%     'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
+%      'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
 % addpath(inpath);
 % inDat = load(filename);
 % temp_name = string(fieldnames(inDat));
@@ -60,7 +60,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
 
         %Plot the response
         tic;
-        figure('units','normalized','outerposition',[0.3 0.3 0.5 0.40])
+        figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40])
         plot(times, CzAvg,'-r', 'LineWidth', 1.5)
         set(gca, 'Ydir','reverse')
         hold on
@@ -72,7 +72,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
         [Response_elect] = Response_selection(peak);
         Overall_response_time = toc;
         allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
-        
+
 
         if strcmp(Response_elect, "No")
 
@@ -96,7 +96,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTime(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
                 peak_response_time = toc;
@@ -115,7 +115,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTime(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
                 peak_response_time = toc;
@@ -134,7 +134,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTime(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
                 peak_response_time = toc;
@@ -153,7 +153,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTime(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
                 peak_response_time = toc;
@@ -172,7 +172,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTime(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
                 peak_response_time = toc;
@@ -282,7 +282,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
         % check if there is an overall response
         peak = "Overall";
         [Response_elect] = Response_selection(peak);
-                response_time = toc;
+        response_time = toc;
         allParticipant(current_index).(Reviewer_elect).(Session_elect).response_time = response_time;
         allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
 
@@ -307,8 +307,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data);
+                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                    times, GFP_times, GFP_data, x_tf);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
                 peak_response_time = toc;
@@ -330,8 +331,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
 
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data);
+                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                    times, GFP_times, GFP_data, x_tf);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
                 peak_response_time = toc;
@@ -352,8 +354,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
 
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data);
+                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                    times, GFP_times, GFP_data, x_tf);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
                 peak_response_time = toc;
@@ -374,8 +377,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
 
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data);
+                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                    times, GFP_times, GFP_data, x_tf);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
                 peak_response_time = toc;
@@ -397,8 +401,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
 
             if strcmp(Response_elect, "Yes")
-                [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTimePlus(CzAvg, x_tf, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data);
+                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                    times, GFP_times, GFP_data, x_tf);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
                 peak_response_time = toc;

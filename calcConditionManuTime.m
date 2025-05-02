@@ -1,7 +1,7 @@
 function [Peak_amp, Peak_time, Peak_time_times] = calcConditionManuTime(CzAvg, times, peak)
 trial = CzAvg;
 
-f1 = figure('units','normalized','outerposition',[0.3 0.3 0.5 0.40]);
+f1 = figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40]);
 plot(times, trial,'-r', 'LineWidth', 1.5)
 set(gca, 'Ydir','reverse')
 hold on
@@ -9,16 +9,19 @@ hold on
 xlim([-10 100])
 title(peak)
 
-[raw_Peak_time, y] = ginput(1);
+% [raw_Peak_time, y] = ginput(1);
+% Peak_time_round = round(raw_Peak_time / 0.2) * 0.2;
+% Peak_time = Peak_time_round;
+% [~, Peak_time_times(2)] = min(abs(times - Peak_time_round));
+% Peak_time_times = Peak_time_times(2);
+% Peak_amp = CzAvg(Peak_time_times);
 
-Peak_time_round = round(raw_Peak_time / 0.2) * 0.2;
-Peak_time = Peak_time_round;
-[~, Peak_time_times(2)] = min(abs(times - Peak_time_round));
-Peak_time_times = Peak_time_times(2);
-Peak_amp = CzAvg(Peak_time_times);
+[x, y] = pointSelection();
+Peak_time = x;
+Peak_time_times = x;
+Peak_amp = y;
 
-
-plot(Peak_time_times, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
+plot(Peak_time, Peak_amp, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
 
 
 
