@@ -16,14 +16,16 @@
 %% Script
 % %% Load data
 % % Select the workspace that has all previously processed data
-% [filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
-%      'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
-% addpath(inpath);
-% inDat = load(filename);
-% temp_name = string(fieldnames(inDat));
-% inDat = inDat.(temp_name);
-% allParticipant = inDat;
-
+[filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
+     'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
+addpath(inpath);
+inDat = load(filename);
+temp_name = string(fieldnames(inDat));
+inDat = inDat.(temp_name);
+allParticipant = inDat;
+% Note if everyone is working on the same computer we can just set this as
+% a specific path so people do not have to load in the data 
+% Also make sure it is store locally on whatever computure you are using 
 %% Enter information about Reviewer_metrics
 % Select which Reviewer_it is
 ReviewerOpt = ["Reviewer_1" "Reviewer_2" "Reviewer_3" "Reviewer_4"];
@@ -96,7 +98,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
                 peak_response_time = toc;
@@ -115,7 +117,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
                 peak_response_time = toc;
@@ -134,7 +136,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
                 peak_response_time = toc;
@@ -153,7 +155,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
                 peak_response_time = toc;
@@ -172,7 +174,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             [Response_elect] = Response_selection(peak);
             allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
             if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(CzAvg, times, peak);
+                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
                 peak_response_time = toc;

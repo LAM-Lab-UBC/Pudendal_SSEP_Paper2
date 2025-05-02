@@ -1,12 +1,16 @@
 function [Peak_time, Peak_amp] = calcConditionManuTimeV2(trace_x, trace_y, peak)
     % Plot the trace
     f1 = figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40]);
-    plot(trace_x, trace_y, 'b'); hold on;
+    plot(trace_x, trace_y,'-r', 'LineWidth', 1.5);
+    hold on;
+    set(gca, 'Ydir','reverse')
     xlim([-10 100])
     Y_max = max(trace_y(201:751))*1.25;
     Y_min = min(trace_y(201:751))*1.25;
     ylim([Y_min Y_max])
     title( {peak,'Use arrow keys to move. Press Enter to select. Esc to quit.'});
+
+
     % Initial index
 
     if strcmp(peak, "P1")
