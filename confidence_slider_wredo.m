@@ -1,5 +1,6 @@
 function [Confidence_val, redo] = confidence_slider_wredo()
-    %CONFIDENCE_SLIDER_WREDO  Slider dialog with Continue and Redo buttons
+%Used when Yes is selected for identifying N2    
+%CONFIDENCE_SLIDER_WREDO  Slider dialog with Continue and Redo buttons
     %
     %   [Confidence_val, redo] = confidence_slider_wredo()
     %

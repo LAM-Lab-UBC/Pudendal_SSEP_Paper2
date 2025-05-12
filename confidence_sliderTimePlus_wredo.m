@@ -5,7 +5,7 @@ function [Confidence_val, redo] = confidence_sliderTimePlus_wredo(...
         cbar_label_ITPC, times, GFP_times, GFP_data, ...
         Peak_time, Peak_amp)
     % Same multi‐panel plot as before
-    f1 = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
+    f1 = figure('units','normalized','outerposition',[0.2 0.04 0.5 0.96]);
     t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
     ax1 = nexttile;
     contourf(x_tf, frequencies, dat2plot_PhaseLocked, 40, 'linecolor','none');

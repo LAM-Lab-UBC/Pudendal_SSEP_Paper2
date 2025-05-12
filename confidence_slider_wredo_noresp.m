@@ -1,5 +1,6 @@
 function [Confidence_val, redo] = confidence_slider_wredo_noresp()
-    %CONFIDENCE_SLIDER_WREDO  Slider dialog with Continue and Redo buttons
+%Used when No is selected for either Overall Response or N2 identifying    
+%CONFIDENCE_SLIDER_WREDO  Slider dialog with Continue and Redo buttons
     %
     %   [Confidence_val, redo] = confidence_slider_wredo()
     %
@@ -18,7 +19,7 @@ function [Confidence_val, redo] = confidence_slider_wredo_noresp()
     % Instruction text
     uicontrol('Parent', f, 'Style', 'text', ...
         'Position', [50, 150, 450, 30], ...
-        'String', "How confident are you in selecting 'No Response'?", ...
+        'String', "How confident are you in selecting 'Not Identifiable'?", ...
         'FontSize', 10, 'HorizontalAlignment', 'center');
 
     % Slider position info

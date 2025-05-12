@@ -1,6 +1,6 @@
 function [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp)
 
-f1 = figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40]);
+f1 = figure('units','normalized','outerposition',[0.2 0.2 0.5 0.40]);
 plot(times, CzAvg,'-r', 'LineWidth', 1.5)
 set(gca, 'Ydir','reverse')
 hold on

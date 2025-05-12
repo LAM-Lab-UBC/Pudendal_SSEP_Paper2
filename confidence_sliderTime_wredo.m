@@ -1,6 +1,6 @@
 function [Confidence_val, redo] = confidence_sliderTime_wredo(peak, CzAvg, times, Peak_time, Peak_amp)
     % Plot the signal and mark the peak
-    f1 = figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40]);
+    f1 = figure('units','normalized','outerposition',[0.2 0.2 0.5 0.40]);
     plot(times, CzAvg, '-r', 'LineWidth', 1.5);
     set(gca, 'YDir', 'reverse');
     hold on;

@@ -1,4 +1,4 @@
-function [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(trace_x, trace_y, peak, frequencies, dat2plot_ITPC,...
+function [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(trace_x, trace_y, peak, frequencies, dat2plot_ITPC,...
     dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
     times, GFP_times, GFP_data, x_tf)
 
@@ -21,7 +21,7 @@ while restart
 
     try
         % Create figure and tiled layout
-        f1 = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
+        f1 = figure('units','normalized','outerposition',[0.2 0.04 0.5 0.96]);
         t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
         title(t, {peak,'Use arrow keys to move. Press Enter to select. Esc to quit.'});
 

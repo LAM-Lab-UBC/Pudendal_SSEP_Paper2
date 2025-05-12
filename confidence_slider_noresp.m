@@ -1,5 +1,5 @@
 function [Confidence_val] = confidence_slider_noresp()
-
+% Used when 'No' is selected for identifying Onset, P1, N1, or P2 
 % Create the figure
 f = figure('Position', [1350, 400, 550, 200], ...
     'Name', 'Peak Confidence', ...

@@ -3,7 +3,7 @@ function [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, 
 
 
 
-f1 = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
+f1 = figure('units','normalized','outerposition',[0.2 0.04 0.5 0.96]);
 t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
 
 % "Phase locked"
