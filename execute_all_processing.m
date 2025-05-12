@@ -29,9 +29,15 @@
 % a specific path so people do not have to load in the data
 % Also make sure it is store locally on whatever computure you are using
 %% Enter information about Reviewer_metrics
+% Select which dataset has been loaded
+DatasetOpt = ["Training Data" "Real Data"];
+msgDataset = append("Which dataset have you loaded?");
+DatasetChoice = menu(msgDataset, DatasetOpt);
+Dataset_elect = DatasetOpt(DatasetChoice);
+
 % Select which Reviewer_it is
 ReviewerOpt = ["Reviewer_1" "Reviewer_2" "Reviewer_3" "Reviewer_4"];
-msgReviewer= append("Which Reviewer are you"); %% add the specific trial
+msgReviewer = append("Which Reviewer are you"); %% add the specific trial
 ReviewerChoice = menu(msgReviewer,ReviewerOpt); %Prompt user selection
 Reviewer_elect = ReviewerOpt(ReviewerChoice); %Assign selection
 
@@ -44,9 +50,12 @@ Session_elect = SessionOpt(SessionChoice);
 
 %% Start processing data
 % Create random order for processing data
-%order_trials = randperm(length(allParticipant));
-order_trials = [2, 8, 7, 1, 6, 3, 5, 1]; %FOR TRIAL DATA, SWITCH FOR REAL TRIAL
-%order_trials = length(allParticipant); %FOR REAL TRIAL
+if strcmp(Dataset_elect, 'Training Data')
+    order_trials = [2, 8, 7, 1, 6, 3, 5, 1]; %FOR TRIAL DATA
+else
+    order_trials = randperm(length(allParticipant)); %FOR REAL DATA
+end
+
 %% Time domain only
 % Reviewer_1 & 2 day 1
 % Reviewer_3 & 4 day 2
@@ -76,7 +85,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             end
 
             %Delay for first trial
-            if i == 10
+            if i == 1
                 disp('Trial is ready to start. Click HERE then press any key to begin.')
                 pause()
             end
