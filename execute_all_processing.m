@@ -103,7 +103,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
 
             if strcmp(Response_elect, "No")
 
-                [Confidence_val, redo] = confidence_slider_wredo();
+                [Confidence_val, redo] = confidence_slider_wredo_noresp();
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
@@ -342,7 +342,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
 
             if strcmp(Response_elect, "No")
-                [Confidence_val, redo] = confidence_slider_wredo();
+                [Confidence_val, redo] = confidence_slider_wredo_noresp();
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
                 allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
