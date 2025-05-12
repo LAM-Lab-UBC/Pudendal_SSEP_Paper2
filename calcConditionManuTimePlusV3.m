@@ -99,6 +99,7 @@ if ~isempty(selected_points)
 else
     Peak_time = [];
     Peak_amp = [];
+    
 end
 Peak_time = Peak_time(end);
 Peak_amp = Peak_amp(end);
