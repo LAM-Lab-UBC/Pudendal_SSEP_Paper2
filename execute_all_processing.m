@@ -71,14 +71,14 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
 
             % Scheduled breaks
             if i == 20
-                disp('Take a 2 minute break! Afterwards, click HERE then press any key.')
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
                 web('https://www.youtube.com/watch?v=zmuEbsjXp-w')
                 pause()
                 !taskkill -f -im msedge.exe
             end
 
             if i == 40
-                disp('Take a 2 minute break! Afterwards, click HERE then press any key.')
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
                 web('https://www.youtube.com/watch?v=xYIshNRm1rs')
                 pause()
                 !taskkill -f -im msedge.exe
@@ -250,14 +250,15 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
 
             % Scheduled breaks
             if i == 20
-                disp('Take a 2 minute break! Afterwards, click HERE then press any key.')
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
+                %system('"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "https://www.youtube.com/watch?v=zmuEbsjXp-w" 2>nul');
                 web('https://www.youtube.com/watch?v=zmuEbsjXp-w')
                 pause()
                 !taskkill -f -im msedge.exe
             end
 
             if i == 40
-                disp('Take a 2 minute break! Afterwards, click HERE then press any key.')
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
                 web('https://www.youtube.com/watch?v=xYIshNRm1rs')
                 pause()
                 !taskkill -f -im msedge.exe
