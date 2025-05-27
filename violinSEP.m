@@ -30,20 +30,23 @@ function T = violinSEP(allParticipant)
             if exist('violinplot','file') == 2
                 % Grouped violin plot by reviewer
                 violinplot(data, grp, 'Parent', ax);
+                xlim(ax,[0.5, numel(unique(grp))+0.5]);
             else
                 % Fallback: boxchart grouped by reviewer
-                boxchart(ax, grp, data);
+                boxchart(ax, categorical(grp), data);
+                
             end
 
             % Format axes
-            xlim(ax,[0.5, numel(unique(grp))+0.5]);
+            
             ylim(ax,[0,1]);
             xticklabels(ax, unique(grp));
+            set(gca, 'TickLabelInterpreter', 'none');
             xtickangle(ax,45);
             ylabel(ax,'Confidence');
             title(ax,sprintf('%s (%s)', events{e}, days{d}));
             hold(ax,'off');
-            legend(ax,'Location','best', 'Interpreter', 'none');
+
         end
     end
 
