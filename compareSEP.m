@@ -64,7 +64,7 @@ for r = 1:(endIdx - startIdx + 1)
             ev = dayStruct.(events{e});
             if strcmpi(ev.Response,'Yes')
                 %xline(ax1, ev.time, style, 'Color', colors(i,:), 'LineWidth', 2);
-                plot(ev.time, ev.amp, 'bo', 'MarkerSize',7, 'LineWidth', 2);
+                plot(ev.time, ev.amp, 'bo', 'MarkerSize',7, 'LineWidth', 2, 'Color', 'b');
             end
         end
 
@@ -86,7 +86,8 @@ for r = 1:(endIdx - startIdx + 1)
         hStyle = gobjects(2,1);
         hStyle(1) = plot(ax1, NaN, NaN, '-', 'Color','k','LineWidth',2);
         hStyle(2) = plot(ax1, NaN, NaN, ':', 'Color','k','LineWidth',2);
-        styleLabels = {'Solid = Confidence ≥ 0.5'; 'Dotted = Confidence < 0.5'};
+        hStyle(3) = plot(ax1, NaN, NaN, 'o', 'Color','b','LineWidth',2);
+        styleLabels = {'Solid = Confidence ≥ 0.5'; 'Dotted = Confidence < 0.5'; 'Marker = Expert Revier Answer'};
         legend(ax1, [hRev; hStyle], [revLabels; styleLabels], 'Location', 'best');
         hold(ax1,'off');
     end
@@ -122,7 +123,7 @@ for r = 1:(endIdx - startIdx + 1)
             ev = dayStruct.(events{e});
             if strcmpi(ev.Response,'Yes')
                 %xline(ax1, ev.time, style, 'Color', colors(i,:), 'LineWidth', 2);
-                plot(ev.time, ev.amp, 'bo', 'MarkerSize',7, 'LineWidth', 2);
+                plot(ev.time, ev.amp, 'bo', 'MarkerSize',7, 'LineWidth', 2, 'Color', 'b');
             end
         end
 
@@ -144,7 +145,8 @@ for r = 1:(endIdx - startIdx + 1)
         hStyleF = gobjects(2,1);
         hStyleF(1) = plot(ax2, NaN, NaN, '-', 'Color','k','LineWidth',2);
         hStyleF(2) = plot(ax2, NaN, NaN, ':', 'Color','k','LineWidth',2);
-        styleLabelsF = {'Solid = Confidence ≥ 0.5'; 'Dotted = Confidence < 0.5'};
+        hStyleF(3) = plot(ax2, NaN, NaN, 'o', 'Color','b','LineWidth',2);
+        styleLabelsF = {'Solid = Confidence ≥ 0.5'; 'Dotted = Confidence < 0.5'; 'Marker = Expert Revier Answer'};
         legend(ax2, [hRevF; hStyleF], [revLabelsF; styleLabelsF], 'Location', 'best');
         hold(ax2,'off');
     end
