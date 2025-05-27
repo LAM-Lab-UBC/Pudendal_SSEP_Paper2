@@ -72,7 +72,7 @@ function T = scatterSEP(allParticipant)
               'VariableNames',{'TraceIndex','TrialNum','Reviewer','DayType','Event','Confidence'});
 
     % --- Plotting
-    figure;
+    figure('units','normalized','outerposition',[0.01 0.04 0.98 0.96]);
     tiledlayout(numel(events),2,'TileSpacing','compact','Padding','compact');
     for e = 1:numel(events)
         for dt = 1:2
@@ -93,7 +93,7 @@ function T = scatterSEP(allParticipant)
             xlabel(ax,'Confidence');
             ylabel(ax,'Trace Index');
             title(ax,sprintf('%s (%s)', events{e}, currentDay));
-            legend(ax,'Location','best');
+            legend(ax,'Location','best', 'Interpreter', 'none');
         end
     end
 end

@@ -11,7 +11,7 @@ function T = violinSEP(allParticipant)
     days   = {'ERP','Full'};
 
     % Create figure layout: 5 rows × 2 columns
-    figure;
+    figure('units','normalized','outerposition',[0.01 0.04 0.98 0.96]);
     tiledlayout(numel(events),2,'TileSpacing','compact','Padding','compact');
 
     % Loop through events and day types
@@ -43,6 +43,7 @@ function T = violinSEP(allParticipant)
             ylabel(ax,'Confidence');
             title(ax,sprintf('%s (%s)', events{e}, days{d}));
             hold(ax,'off');
+            legend(ax,'Location','best', 'Interpreter', 'none');
         end
     end
 

@@ -69,7 +69,7 @@ for r = 1:(endIdx - startIdx + 1)
         end
 
     end
-    title(ax1, sprintf('%d: %s (ERP)', traceIdx, trialNum));
+    title(ax1, sprintf('%d: %s (ERP)', traceIdx, trialNum), 'Interpreter', 'none');
     xlim(ax1, [-10 100]);
     set(ax1,'YDir','reverse');  % invert y-axis (negative up)
     hold(ax1,'off');
@@ -128,7 +128,7 @@ for r = 1:(endIdx - startIdx + 1)
         end
 
     end
-    title(ax2, sprintf('%d: %s (Full)', traceIdx, trialNum));
+    title(ax2, sprintf('%d: %s (Full)', traceIdx, trialNum), 'Interpreter', 'none');
     xlim(ax2, [-10 100]);
     set(ax2,'YDir','reverse');  % invert y-axis (negative up)
     hold(ax2,'off');
