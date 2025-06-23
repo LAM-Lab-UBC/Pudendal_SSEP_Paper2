@@ -16,13 +16,15 @@
 %% Script
 % %% Load data
 % % Select the workspace that has all previously processed data
-[filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
-    'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
-addpath(inpath);
-inDat = load(filename);
-temp_name = string(fieldnames(inDat));
-inDat = inDat.(temp_name);
-allParticipant = inDat;
+
+% [filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
+%     'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
+% addpath(inpath);
+% inDat = load(filename);
+% temp_name = string(fieldnames(inDat));
+% inDat = inDat.(temp_name);
+% allParticipant = inDat;
+
 % Note if everyone is working on the same computer we can just set this as
 % a specific path so people do not have to load in the data
 % Also make sure it is store locally on whatever computure you are using
