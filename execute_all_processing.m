@@ -16,20 +16,28 @@
 %% Script
 % %% Load data
 % % Select the workspace that has all previously processed data
-[filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
-    'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
-addpath(inpath);
-inDat = load(filename);
-temp_name = string(fieldnames(inDat));
-inDat = inDat.(temp_name);
-allParticipant = inDat;
+
+% [filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
+%     'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
+% addpath(inpath);
+% inDat = load(filename);
+% temp_name = string(fieldnames(inDat));
+% inDat = inDat.(temp_name);
+% allParticipant = inDat;
+
 % Note if everyone is working on the same computer we can just set this as
 % a specific path so people do not have to load in the data
 % Also make sure it is store locally on whatever computure you are using
 %% Enter information about Reviewer_metrics
+% Select which dataset has been loaded
+DatasetOpt = ["Training Data" "Real Data"];
+msgDataset = append("Which dataset have you loaded?");
+DatasetChoice = menu(msgDataset, DatasetOpt);
+Dataset_elect = DatasetOpt(DatasetChoice);
+
 % Select which Reviewer_it is
 ReviewerOpt = ["Reviewer_1" "Reviewer_2" "Reviewer_3" "Reviewer_4"];
-msgReviewer= append("Which Reviewer are you"); %% add the specific trial
+msgReviewer = append("Which Reviewer are you"); %% add the specific trial
 ReviewerChoice = menu(msgReviewer,ReviewerOpt); %Prompt user selection
 Reviewer_elect = ReviewerOpt(ReviewerChoice); %Assign selection
 
@@ -42,7 +50,12 @@ Session_elect = SessionOpt(SessionChoice);
 
 %% Start processing data
 % Create random order for processing data
-order_trials = randperm(length(allParticipant));
+if strcmp(Dataset_elect, 'Training Data')
+    order_trials = [2, 8, 7, 1, 6, 3, 5, 1]; %FOR TRIAL DATA
+else
+    order_trials = randperm(length(allParticipant)); %FOR REAL DATA
+end
+
 %% Time domain only
 % Reviewer_1 & 2 day 1
 % Reviewer_3 & 4 day 2
@@ -50,149 +63,177 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
         || strcmp(Reviewer_elect, "Reviewer_3") && strcmp(Session_elect, "Day_2") || strcmp(Reviewer_elect, "Reviewer_4") && strcmp(Session_elect, "Day_2")
     for i = 1:length(order_trials)
         current_index = order_trials(i);
-        CzAvg = allParticipant(current_index).Trial.CzAvg;
-        times = allParticipant(current_index).Trial.times;
+        redo = true;
+        while redo
 
-        % Scheduled breaks
-        if i == 20 || i == 40
-            web('https://www.youtube.com/watch?v=9EcjWd-O4jI')
-            pause(221)
-            !taskkill -f -im msedge.exe
+            CzAvg = allParticipant(current_index).Trial.CzAvg;
+            times = allParticipant(current_index).Trial.times;
+
+            % Scheduled breaks
+            if i == 20
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
+                web('https://www.youtube.com/watch?v=zmuEbsjXp-w')
+                pause()
+                !taskkill -f -im msedge.exe
+            end
+
+            if i == 40
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
+                web('https://www.youtube.com/watch?v=xYIshNRm1rs')
+                pause()
+                !taskkill -f -im msedge.exe
+            end
+
+            %Delay for first trial
+            if i == 1
+                disp('Trial is ready to start. Click HERE then press any key to begin.')
+                pause()
+            end
+
+            %Progress bar
+            prog = sprintf('Trace %d of %d', i, length(order_trials));
+            disp(prog)
+
+            %Plot the response
+            tic;
+            figure('units','normalized','outerposition',[0.2 0.2 0.5 0.40])
+            plot(times, CzAvg,'-r', 'LineWidth', 1.5)
+            set(gca, 'Ydir','reverse')
+            hold on
+            xlim([-10 100])
+            hold off
+
+            % check if there is an overall response
+            peak = "Overall";
+            [Response_elect] = Response_selection(peak);
+            Overall_response_time = toc;
+            allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
+
+
+            if strcmp(Response_elect, "No")
+
+                [Confidence_val, redo] = confidence_slider_wredo_noresp();
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
+
+            elseif strcmp(Response_elect, "Yes")
+                % Onset
+                peak = "Onset";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_slider_noresp();
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
+
+                %P1
+                peak = "P1";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    [Confidence_val] = confidence_slider_noresp();
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
+
+                %N1
+                peak = "N1";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    [Confidence_val] = confidence_slider_noresp();
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
+
+                %P2
+                peak = "P2";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    [Confidence_val] = confidence_slider_noresp();
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
+
+                %N2
+                peak = "N2";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
+                    [Confidence_val, redo] = confidence_sliderTime_wredo(peak,CzAvg, times, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    [Confidence_val, redo] = confidence_slider_wredo_noresp();
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
+
+            end
+
+            if ~redo
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).response_time = Overall_response_time;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).order = i;
+                close all
+            else
+                close all
+                disp('Restarting this trial')
+            end
         end
-
-        %Plot the response
-        tic;
-        figure('units','normalized','outerposition',[0.3 0.2 0.5 0.40])
-        plot(times, CzAvg,'-r', 'LineWidth', 1.5)
-        set(gca, 'Ydir','reverse')
-        hold on
-        xlim([-10 100])
-        hold off
-
-        % check if there is an overall response
-        peak = "Overall";
-        [Response_elect] = Response_selection(peak);
-        Overall_response_time = toc;
-        allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
-
-
-        if strcmp(Response_elect, "No")
-
-            [Confidence_val] = confidence_slider();
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
-
-        elseif strcmp(Response_elect, "Yes")
-            % Onset
-            peak = "Onset";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider();
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
-
-            %P1
-            peak = "P1";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider();
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
-
-            %N1
-            peak = "N1";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider();
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
-
-            %P2
-            peak = "P2";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider();
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
-
-            %N2
-            peak = "N2";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimeV2(times,CzAvg, peak);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTime(peak,CzAvg, times, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider();
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
-
-        end
-
-        allParticipant(current_index).(Reviewer_elect).(Session_elect).response_time = Overall_response_time;
-        allParticipant(current_index).(Reviewer_elect).(Session_elect).order = i;
-        close all
     end
+    disp("You're done, yay!")
 end
 
 
@@ -202,228 +243,258 @@ end
 if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || strcmp(Reviewer_elect, "Reviewer_2") && strcmp(Session_elect, "Day_2") ...
         || strcmp(Reviewer_elect, "Reviewer_3") && strcmp(Session_elect, "Day_1") || strcmp(Reviewer_elect, "Reviewer_4") && strcmp(Session_elect, "Day_1")
     for i = 1:length(order_trials)
-
-        % Scheduled breaks
-        if i == 20 || i == 40
-
-            web('https://www.youtube.com/watch?v=9EcjWd-O4jI')
-            pause(221)
-            !taskkill -f -im msedge.exe
-        end
-
         current_index = order_trials(i);
-        CzAvg = allParticipant(current_index).Trial.CzAvg;
-        x_tf = allParticipant(current_index).Trial.x_tf;
-        x = allParticipant(current_index).Trial.times;
-        tf = allParticipant(current_index).Trial.tf;
-        times = allParticipant(current_index).Trial.times;
-        frequencies = allParticipant(current_index).Trial.frequencies;
-        GFP_data = allParticipant(current_index).Trial.GFP_data;
-        GFP_times = times(201:750);
 
-        min_vect = min(min(tf(:,:,:,:),[],2),[],3);
-        max_vect = max(max(tf(:,:,:),[],2),[],3);
-        c_vector = max([abs(min_vect),abs(max_vect)],[],2);
-        min_vect = -c_vector;
-        min_vect(4) = 0; % for ITP
-        max_vect= c_vector;
-        cbar_labels = {'dB';'Power (dB)';'dB';'ITPC';'Power (dB)'};
+        redo = true;
+        while redo
 
-        tic;
-        figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96])
-        t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
-
-        % "Phase locked"
-        ax1 =  nexttile;
-        dat2plot_PhaseLocked = squeeze(tf(5,:,:));
-        cbar_label_PhaseLocked = cbar_labels(5);
-        color_edges_PhaseLocked = [min_vect(5) max_vect(5)];
-        contourf(x_tf, frequencies, dat2plot_PhaseLocked,40,'linecolor', 'none')
-        ylabel('Frequency')
-        xlabel('Time (ms)')
-        title("Phase locked")
-        xlim([-10 100]);
-        set(ax1, 'clim', color_edges_PhaseLocked);
-        c2 = colorbar;
-        colormap("jet");
-        c2.Label.String = string(cbar_label_PhaseLocked);
-
-        % "ITPC"
-        ax2 =  nexttile;
-        dat2plot_ITPC = squeeze(tf(4,:,:));
-        cbar_label_ITPC = cbar_labels(4);
-        color_edges_ITPC = [min_vect(4) max_vect(4)];
-        contourf(x_tf, frequencies, dat2plot_ITPC,40,'linecolor', 'none')
-        ylabel('Frequency')
-        xlabel('Time (ms)')
-        title("ITPC")
-        xlim([-10 100]);
-        set(ax2, 'clim', color_edges_ITPC);
-        c4 = colorbar;
-        colormap("jet");
-        c4.Label.String = string(cbar_label_ITPC)';
-
-        % Global Field Potential
-        ax3 = nexttile;
-        plot(GFP_times, GFP_data,'-k', 'LineWidth', 1.5)
-        title("Global Field Potential")
-        xlim([-10 100]);
-        xlabel('Time (ms)')
-        ylabel('Amplitude (µV)')
-
-        % Time domain average
-        ax4 = nexttile;
-        %CzAvg_limits = CzAvg(201:751);
-        plot(times, CzAvg,'-r', 'LineWidth', 1.5)
-        title("Average")
-        xlim([-10 100]);
-        xlabel('Time (ms)')
-        ylabel('Amplitude (µV)')
-        set(ax4, 'Ydir','reverse', 'YColor', 'k')
-
-        % check if there is an overall response
-        peak = "Overall";
-        [Response_elect] = Response_selection(peak);
-        response_time = toc;
-        allParticipant(current_index).(Reviewer_elect).(Session_elect).response_time = response_time;
-        allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
-
-        if strcmp(Response_elect, "No")
-            [Confidence_val] = confidence_slider();
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
-
-        elseif strcmp(Response_elect, "Yes")
-            % Onset
-            peak = "Onset";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
-                    times, GFP_times, GFP_data, x_tf);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider();
+            % Scheduled breaks
+            if i == 20
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
+                %system('"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "https://www.youtube.com/watch?v=zmuEbsjXp-w" 2>nul');
+                web('https://www.youtube.com/watch?v=zmuEbsjXp-w')
+                pause()
+                !taskkill -f -im msedge.exe
             end
 
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
-
-            %P1
-            peak = "P1";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
-
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
-                    times, GFP_times, GFP_data, x_tf);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider();
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
-
-            %N1
-            peak = "N1";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
-
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
-                    times, GFP_times, GFP_data, x_tf);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider();
-            end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
-
-            %P2
-            peak = "P2";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
-
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
-                    times, GFP_times, GFP_data, x_tf);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                [Confidence_val] = confidence_slider();
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
+            if i == 40
+                disp('Take a 2 minute break! Afterwards, click HERE then press any key. The browser will close and the next trace will appear.')
+                web('https://www.youtube.com/watch?v=xYIshNRm1rs')
+                pause()
+                !taskkill -f -im msedge.exe
             end
 
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
-
-            %N2
-            peak = "N2";
-            tic;
-            [Response_elect] = Response_selection(peak);
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
-
-            if strcmp(Response_elect, "Yes")
-                [Peak_time, Peak_amp] = calcConditionManuTimePlusV3(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
-                    times, GFP_times, GFP_data, x_tf);
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
-                    dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
-            elseif strcmp(Response_elect, "No")
-                peak_response_time = toc;
-                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
-                [Confidence_val] = confidence_slider();
+            %Delay for first trial
+            if i == 1
+                disp('Trial is ready to start. Click HERE then press any key to begin.')
+                pause()
             end
-            allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
+
+            %Progress bar
+            prog = sprintf('Trace %d of %d', i, length(order_trials));
+            disp(prog)
+
+            %Retrieve data
+            CzAvg = allParticipant(current_index).Trial.CzAvg;
+            x_tf = allParticipant(current_index).Trial.x_tf;
+            x = allParticipant(current_index).Trial.times;
+            tf = allParticipant(current_index).Trial.tf;
+            times = allParticipant(current_index).Trial.times;
+            frequencies = allParticipant(current_index).Trial.frequencies;
+            GFP_data = allParticipant(current_index).Trial.GFP_data;
+            GFP_times = times(201:750);
+
+            min_vect = min(min(tf(:,:,:,:),[],2),[],3);
+            max_vect = max(max(tf(:,:,:),[],2),[],3);
+            c_vector = max([abs(min_vect),abs(max_vect)],[],2);
+            min_vect = -c_vector;
+            min_vect(4) = 0; % for ITP
+            max_vect= c_vector;
+            cbar_labels = {'dB';'Power (dB)';'dB';'ITPC';'Power (dB)'};
+
+            tic;
+            figure('units','normalized','outerposition',[0.2 0.04 0.5 0.96])
+            t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
+
+            % "Phase locked"
+            ax1 =  nexttile;
+            dat2plot_PhaseLocked = squeeze(tf(5,:,:));
+            cbar_label_PhaseLocked = cbar_labels(5);
+            color_edges_PhaseLocked = [min_vect(5) max_vect(5)];
+            contourf(x_tf, frequencies, dat2plot_PhaseLocked,40,'linecolor', 'none')
+            ylabel('Frequency')
+            xlabel('Time (ms)')
+            title("Phase Locked Power")
+            xlim([-10 100]);
+            set(ax1, 'clim', color_edges_PhaseLocked);
+            c2 = colorbar;
+            colormap("jet");
+            c2.Label.String = string(cbar_label_PhaseLocked);
+
+            % "ITPC"
+            ax2 =  nexttile;
+            dat2plot_ITPC = squeeze(tf(4,:,:));
+            cbar_label_ITPC = cbar_labels(4);
+            color_edges_ITPC = [min_vect(4) max_vect(4)];
+            contourf(x_tf, frequencies, dat2plot_ITPC,40,'linecolor', 'none')
+            ylabel('Frequency')
+            xlabel('Time (ms)')
+            title("Inter Trial Phase Coherence (ITPC)")
+            xlim([-10 100]);
+            set(ax2, 'clim', color_edges_ITPC);
+            c4 = colorbar;
+            colormap("jet");
+            c4.Label.String = string(cbar_label_ITPC)';
+
+            % Global Field Potential
+            ax3 = nexttile;
+            plot(GFP_times, GFP_data,'-k', 'LineWidth', 1.5)
+            title("Global Field Power (GFP)")
+            xlim([-10 100]);
+            Y_max = max(GFP_data(101:end)) * 1.25;
+            ylim([0 Y_max]);
+            xlabel('Time (ms)')
+            ylabel('Amplitude (µV)')
+
+            % Time domain average
+            ax4 = nexttile;
+            %CzAvg_limits = CzAvg(201:751);
+            plot(times, CzAvg,'-r', 'LineWidth', 1.5)
+            title("Evoked Response Potential (ERP)")
+            xlim([-10 100]);
+            xlabel('Time (ms)')
+            ylabel('Amplitude (µV)')
+            set(ax4, 'Ydir','reverse', 'YColor', 'k')
+
+            % check if there is an overall response
+            peak = "Overall";
+            [Response_elect] = Response_selection(peak);
+            response_time = toc;
+            allParticipant(current_index).(Reviewer_elect).(Session_elect).response_time = response_time;
+            allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Response = Response_elect;
+
+            if strcmp(Response_elect, "No")
+                [Confidence_val, redo] = confidence_slider_wredo_noresp();
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Overall_Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
+
+            elseif strcmp(Response_elect, "Yes")
+                % Onset
+                peak = "Onset";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Response = Response_elect;
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                        times, GFP_times, GFP_data, x_tf);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_slider_noresp();
+                end
+
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).Onset.Confidence = Confidence_val;
+
+                %P1
+                peak = "P1";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Response = Response_elect;
+
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                        times, GFP_times, GFP_data, x_tf);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_slider_noresp();
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P1.Confidence = Confidence_val;
+
+                %N1
+                peak = "N1";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Response = Response_elect;
+
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                        times, GFP_times, GFP_data, x_tf);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_slider_noresp();
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N1.Confidence = Confidence_val;
+
+                %P2
+                peak = "P2";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Response = Response_elect;
+
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                        times, GFP_times, GFP_data, x_tf);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
+                    [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    [Confidence_val] = confidence_slider_noresp();
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.peak_response_time = peak_response_time;
+                end
+
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).P2.Confidence = Confidence_val;
+
+                %N2
+                peak = "N2";
+                tic;
+                [Response_elect] = Response_selection(peak);
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Response = Response_elect;
+
+                if strcmp(Response_elect, "Yes")
+                    [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(times, CzAvg, peak, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
+                        times, GFP_times, GFP_data, x_tf);
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.amp = Peak_amp;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.time = Peak_time;
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
+                    [Confidence_val, redo] = confidence_sliderTimePlus_wredo(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
+                        dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp);
+                elseif strcmp(Response_elect, "No")
+                    peak_response_time = toc;
+                    allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.peak_response_time = peak_response_time;
+                    [Confidence_val, redo] = confidence_slider_wredo_noresp();
+                end
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).N2.Confidence = Confidence_val;
+            end
+
+            if ~redo
+                allParticipant(current_index).(Reviewer_elect).(Session_elect).order = i;
+                close all
+            else
+                close all
+                disp('Restarting this trial')
+            end
+
         end
-
-        allParticipant(current_index).(Reviewer_elect).(Session_elect).order = i;
-        close all
     end
-
     % Select which tool was the most helpful in the reviewing process
     ToolOpt = ["Time-Frequency" "Global Field Potential" "Did not need either"];
     msgTool = 'What tool was the most helpful in classifying the SEP responses';
@@ -432,5 +503,6 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
     for k = 1:length(allParticipant)
         allParticipant(k).(Reviewer_elect).Tool = Tool_elect;
     end
+    disp("You're done, yay!")
 end
 
