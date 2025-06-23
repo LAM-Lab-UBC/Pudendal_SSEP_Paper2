@@ -270,6 +270,8 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
         plot(GFP_times, GFP_data,'-k', 'LineWidth', 1.5)
         title("Global Field Potential")
         xlim([-10 100]);
+        Y_max = max(GFP_data(101:end)) * 1.25;
+        ylim([0 Y_max]);
         xlabel('Time (ms)')
         ylabel('Amplitude (µV)')
 
