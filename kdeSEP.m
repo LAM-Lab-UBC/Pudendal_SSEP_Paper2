@@ -43,7 +43,7 @@ function kdeSEP(allParticipant)
                 if numel(data) < 2
                     continue;
                 end
-                [f, xi] = ksdensity(data);  % automatic support
+                [f, xi] = ksdensity(data,'Bandwidth',0.04);  % automatic support
                 plot(ax, xi, f, 'LineWidth', 2, 'Color', cmap(r,:));
             end
 
