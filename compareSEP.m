@@ -47,7 +47,7 @@ for s = 1:length(selection)
             revStruct = allParticipant(traceIdx).(revName);
             revNum    = sscanf(revName, 'Reviewer_%d');
             % Map Day for ERP: reviewers 1-2 -> Day_1, others -> Day_2
-            if revNum <= 2
+            if revNum == 1 || revNum == 2 || revNum == 5 || revNum == 6 || revNum == 9 || revNum == 10
                 dayField = 'Day_1';
             else
                 dayField = 'Day_2';
