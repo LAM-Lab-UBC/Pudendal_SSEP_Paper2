@@ -2,8 +2,8 @@
 % mapping: reviewers [1,2,5,6,9,10] do Day_1→ERP, Day_2→Full
 %          reviewers [3,4,7,8] do Day_1→Full, Day_2→ERP
 
-erpFirst = [1,2,5,6,9,10];
-fullFirst = [3,4,7,8,11,12];
+erpFirst = [1,2,5,6,9,10,14,15,16];
+fullFirst = [3,4,7,8,11,12,13,17];
 
 nTrials = numel(allParticipant);
 for ti = 1:nTrials
