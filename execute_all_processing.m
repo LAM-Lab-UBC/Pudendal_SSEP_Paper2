@@ -47,6 +47,12 @@ msgSession = 'What reviewing session is this';
 SessionChoice = menu(msgSession, SessionOpt);
 Session_elect = SessionOpt(SessionChoice);
 
+% Select which Block section it is
+BlockOpt = ["Block_1" "Block_2" "Block_3" " Block_4" "Block_5" "Block_6" "Block_7"];
+msgBlock = 'What block is this participant in';
+BlockChoice = menu(msgBlock, BlockOpt);
+Block_elect = BlockOpt(BlockChoice);
+
 
 %% Start processing data
 % Create random order for processing data
@@ -518,6 +524,10 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
         allParticipant(k).(Reviewer_elect).Tool = Tool_elect;
     end
     disp("You're done, yay!")
+
+    current_path = pwd;
+    save_path = append(pwd, "\Data\AllParticipant_", string(Block_elect), "_", string(Reviewer_elect), "_", string(Session_elect), ".mat");
+    save(char(save_path), 'allParticipant')
 end
 
  
