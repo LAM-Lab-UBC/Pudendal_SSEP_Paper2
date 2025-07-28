@@ -248,6 +248,9 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
             end
         end
     end
+    current_path = pwd;
+    save_path = append(pwd, "\Data\AllParticipant_", string(Block_elect), "_", string(Reviewer_elect), "_", string(Session_elect), ".mat");
+    save(char(save_path), 'allParticipant')
     disp("You're done, yay!")
 end
 
@@ -523,11 +526,10 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
     for k = 1:length(allParticipant)
         allParticipant(k).(Reviewer_elect).Tool = Tool_elect;
     end
-    disp("You're done, yay!")
-
     current_path = pwd;
     save_path = append(pwd, "\Data\AllParticipant_", string(Block_elect), "_", string(Reviewer_elect), "_", string(Session_elect), ".mat");
     save(char(save_path), 'allParticipant')
+    disp("You're done, yay!")
 end
 
  
