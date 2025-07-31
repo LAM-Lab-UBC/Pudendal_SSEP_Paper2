@@ -30,6 +30,7 @@
 % Also make sure it is store locally on whatever computure you are using
 %% Enter information about Reviewer_metrics
 % Select which dataset has been loaded
+
 DatasetOpt = ["Training Data" "Real Data"];
 msgDataset = append("Which dataset have you loaded?");
 DatasetChoice = menu(msgDataset, DatasetOpt);
@@ -107,11 +108,13 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
 
             %Plot the response
             tic;
-            figure('units','normalized','outerposition',[0.2 0.2 0.5 0.40])
+            figure('units','normalized','outerposition',[0.2 0.2 0.5 0.40]);
+            
             plot(times, CzAvg,'-r', 'LineWidth', 1.5)
             set(gca, 'Ydir','reverse')
             hold on
             xlim([-10 100])
+            title(prog)
             hold off
 
             % check if there is an overall response
@@ -313,6 +316,7 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_2") || str
             tic;
             figure('units','normalized','outerposition',[0.2 0.04 0.5 0.96])
             t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
+            title(t, prog)
 
             % "Phase locked"
             ax1 =  nexttile;
