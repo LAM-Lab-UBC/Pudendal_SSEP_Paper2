@@ -8,7 +8,7 @@ This pipeline was validated in this study [link to paper]
 
 ### Peak Detection and Extraction of Power Metrics for ITPC and PLP
 - Automatic extraction of peaks from standard tests
-  ![/Figures/AutoFrequencyPeaks.png]!
+  !/Figures/AutoFrequencyPeaks.png
 - The option to manually correct to a different range
 
 ### Peak Amplitude Detection and Extraction of Time Domain Metrics
