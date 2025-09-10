@@ -1,10 +1,10 @@
 %% Header
 % MRPM 2025/04/29
 % Author: Stephanie Wilkinson
-% Project: MRPM SEP
-% File: execute_all_processing.m
+% Project: MRPM SEP Paper 2 
+% File: Reviewer_Execute_all_Processing.m
 
-%% File Description
+%% Code Description
 % For paper 2 in the MRPM SSEP project
 % asks users to review data in two different methods: once with just
 % time-domain infromation and once with time-domain plus time-frequency and
@@ -14,23 +14,9 @@
 % .mat with the pre-processed data
 
 %% Script
-% %% Load data
-% % Select the workspace that has all previously processed data
-
-% [filename, inpath] = uigetfile({'*.mat', 'Impact file (*.mat)'}, ...
-%     'Select .mat workspace with all previously processed data', 'MultiSelect', 'off');
-% addpath(inpath);
-% inDat = load(filename);
-% temp_name = string(fieldnames(inDat));
-% inDat = inDat.(temp_name);
-% allParticipant = inDat;
-
-% Note if everyone is working on the same computer we can just set this as
-% a specific path so people do not have to load in the data
-% Also make sure it is store locally on whatever computure you are using
-%% Enter information about Reviewer_metrics
+addpath("Functions Reviewer");
+%% Info about trial and reviewer
 % Select which dataset has been loaded
-
 DatasetOpt = ["Training Data" "Real Data"];
 msgDataset = append("Which dataset have you loaded?");
 DatasetChoice = menu(msgDataset, DatasetOpt);

@@ -1,9 +1,21 @@
 %% Header
 % MRPM 2025/08/12
 % Author: Stephanie Wilkinson
-% Project:
-% File: pipeline2.m
+% Project: MRPM SEP Paper 2 
+% File: Pipeline_Execute_all_Processing.m
 
+%% Code Description
+% Processing
+% runs time domain averaging, global field power and time frequency
+% processing on all data based on if user says to processes the trial and
+% if it meets requirment its xPT is between 2 and 3
+
+% Analyzing
+% asks user if there is a response
+% autodetects the spot od max power for ITPC and PLP, asks user if they
+% want to correct it
+% asks user there is each even and tries to auto locate it if not can use
+% manual selection 
 %% Inputs
 % if selected to process new data or process data
 
@@ -11,6 +23,7 @@
 % .mats for each trial in a folder selected by the user
 
 %% Script
+addpath("Functions Pipeline");
 ProcessingTask = ["Process new data" "Analyze data"];
 msgProcessingTask = "What task would you like to do";
 ProcessingTaskChoice = menu(msgProcessingTask, ProcessingTask); % Prompt user selection
