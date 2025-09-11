@@ -28,12 +28,12 @@ Extract and save processed data and extracted peak values
 ## Getting Started
 Example Data has been provided in the Data folder
 ### To process data
-With the first pop-up, select process data
-With the first pop-up, select the folder with raw data (labelled Raw Data)
-The next pop-up, select the folder where you want the process data stored (labelled Processed Data)
-Follow prompts to get patient/participant info
+- With the first pop-up, select process data
+- With the first pop-up, select the folder with raw data (labelled Raw Data)
+- The next pop-up, select the folder where you want the process data stored (labelled Processed Data)
+- Follow prompts to get patient/participant info
 ### To analyse data
-With the first pop-up, select analyse data
-Select the folder with the processed data (labelled Processed Data)
-Follow the prompts to select peak powers and event locations
+- With the first pop-up, select analyse data
+- Select the folder with the processed data (labelled Processed Data)
+- Follow the prompts to select peak powers and event locations
 
