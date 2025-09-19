@@ -1,16 +1,16 @@
 function [Peak_time, Peak_amp] = calcConditionManuTimeV2(trace_x, trace_y, peak)
 
-% Initial index
+% Select peak index for cross hairs to start at
 if strcmp(peak, "P1")
-    idx = 451;
+    idx = 451; % 40ms post stim
 elseif strcmp(peak, "P2")
-    idx = 576;
+    idx = 576; % 65ms post stim
 elseif strcmp(peak, "N1")
-    idx = 501;
+    idx = 501; % 50ms post stim
 elseif strcmp(peak, "N2")
-    idx = 626;
+    idx = 626; % 75ms post stim
 elseif strcmp(peak, "Onset")
-    idx = 401;
+    idx = 401; % 30ms posrt stim
 end
 
 restart = true;

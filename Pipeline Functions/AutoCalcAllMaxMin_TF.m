@@ -29,44 +29,41 @@ Auto_Max_Time_ITPC = ITPC_Max_Time;
 h = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
 t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
 
-% phase locked
-ax3 = nexttile;
+% First tile: phase locked
+ax1 = nexttile;
 contourf(x_tf, frequencies, dat2plot_PLP,40,'linecolor', 'none')
 hold on
 xlim([-10 100]);
 ylabel('Frequency')
 xlabel('Time (ms)')
 title("Phase Locked")
-set(ax3, 'clim', color_edges_PLP);
-c3 = colorbar;
+set(ax1, 'clim', color_edges_PLP);
+c1 = colorbar;
 colormap("jet");
-c3.Label.String = string(cbar_label_PLP);
+c1.Label.String = string(cbar_label_PLP);
 plot(Auto_Max_Time_PLP, Auto_Max_Frequency_PLP, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
 hold off
 
-% ITPC
-ax4 =  nexttile;
+% Second tile: ITPC
+ax2 =  nexttile;
 contourf(x_tf, frequencies, dat2plot_ITPC,40,'linecolor', 'none')
 hold on
 xlim([-10 100]);
 ylabel('Frequency')
 xlabel('Time (ms)')
 title("ITPC")
-set(ax4, 'clim', color_edges_ITPC);
-c4 = colorbar;
+set(ax2, 'clim', color_edges_ITPC);
+c2 = colorbar;
 colormap("jet");
-c4.Label.String = string(cbar_label_ITPC);
+c2.Label.String = string(cbar_label_ITPC);
 plot(Auto_Max_Time_ITPC, Auto_Max_Frequency_ITPC, 'bo', 'MarkerSize', 10, 'LineWidth', 2)
 hold off
 
-% Time domain Trace
-ax6 = nexttile;
+% Third tile: Time domain Trace
+ax3 = nexttile;
 plot(times, CzAvg)
 title("Average")
 xlim([-10 100]);
 xlabel('Time (ms)')
 ylabel('Amplitude (µV)')
-set(ax6, 'Ydir','reverse', 'YColor', 'k')
-
-% main_title = append(PartNum, ' ', Setup);
-% title(t, main_title)
+set(ax3, 'Ydir','reverse', 'YColor', 'k')

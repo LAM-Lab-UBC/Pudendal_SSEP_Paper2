@@ -2,38 +2,33 @@ function [Man_Max_Power, Man_Max_Frequency, Man_Max_Time] = Manu_calcMax_TF_v5( 
                         x_tf, frequencies, dat2plot, CzAvg,times,...
                          cbar_label, color_edges, type)
 
-    % Create tile
-    % d layout with specific tile spacing and padding
+    % Create tiled layout with specific tile spacing and padding
     j = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
-    t = tiledlayout('vertical', 'TileSpacing', 'tight', 'Padding', 'tight');
+    t = tiledlayout('vertical', 'TileSpacing', 'tight', 'Padding', 'tight');  
     
-    % Set main title for the entire tiled layout
-    % main_title = strcat(PartNum, ' ', Setup, ' Max');
-    % sgtitle(t, main_title);
-    
-    % Third tile: Average
-    ax6 = nexttile(t);
-    plot(ax6, times, CzAvg);
-    title(ax6, 'Average');
-    xlim(ax6, [-10 100]);
-    xlabel(ax6, 'Time (ms)');
-    ylabel(ax6, 'Amplitude (µV)');
-    set(ax6, 'Ydir', 'reverse', 'YColor', 'k');
-
-    % First tile: Total
+    % First tile: Time Domain Average
     ax1 = nexttile(t);
-    contourf(ax1, x_tf, frequencies, dat2plot, 40, 'linecolor', 'none');
-    hold(ax1, 'on');
-    ylabel(ax1, 'Frequency');
+    plot(ax1, times, CzAvg);
+    title(ax1, 'Average');
+    xlim(ax1, [-10 100]);
     xlabel(ax1, 'Time (ms)');
-    title(ax1, type);
-    set(ax1, 'clim', color_edges);
-    c1 = colorbar(ax1);
-    colormap(ax1, 'jet');
+    ylabel(ax1, 'Amplitude (µV)');
+    set(ax1, 'Ydir', 'reverse', 'YColor', 'k');
+
+    % Second tile: Time Frequency Response
+    ax2 = nexttile(t);
+    contourf(ax2, x_tf, frequencies, dat2plot, 40, 'linecolor', 'none');
+    hold(ax2, 'on');
+    ylabel(ax2, 'Frequency');
+    xlabel(ax2, 'Time (ms)');
+    title(ax2, type);
+    set(ax2, 'clim', color_edges);
+    c1 = colorbar(ax2);
+    colormap(ax2, 'jet');
     c1.Label.String = string(cbar_label);
     
     % Draw rectangle interactively
-    h = drawrectangle(ax1, 'FaceAlpha', 0, 'Color', 'b');
+    h = drawrectangle(ax2, 'FaceAlpha', 0, 'Color', 'b');
     wait(h); % Wait for user to finish drawing the rectangle
     rect_position = h.Position;
     
@@ -66,8 +61,8 @@ function [Man_Max_Power, Man_Max_Frequency, Man_Max_Time] = Manu_calcMax_TF_v5( 
     Man_Max_Time = x_roi(time_max_ind); % Corresponding time
     
     % Plot max point
-    plot(ax1, Man_Max_Time, Man_Max_Frequency, 'bo', 'MarkerSize', 10, 'LineWidth', 2);
+    plot(ax2, Man_Max_Time, Man_Max_Frequency, 'bo', 'MarkerSize', 10, 'LineWidth', 2);
     
-    hold(ax1, 'off');
+    hold(ax2, 'off');
     close(j)
 end

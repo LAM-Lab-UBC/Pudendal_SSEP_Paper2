@@ -40,16 +40,11 @@ msgBlock = 'What block is this participant in';
 BlockChoice = menu(msgBlock, BlockOpt);
 Block_elect = BlockOpt(BlockChoice);
 
-
 %% Start processing data
 % Create random order for processing data
 if strcmp(Dataset_elect, 'Training Data')
     order_trials = [2, 8, 7, 1, 6, 3, 5, 1]; %FOR TRIAL DATA
 else
-    % Use a seed based on reviewer, session, and system time to ensure uniqueness
-    % seed_base = sum(double(char(Reviewer_elect))) + sum(double(char(Session_elect))) + round(now*1e5);
-    % seed_base = mod(seed_base, 2^32);
-    % rng(seed_base);
     rng('shuffle');
     order_trials = randperm(length(allParticipant));
 end
@@ -242,7 +237,6 @@ if strcmp(Reviewer_elect, "Reviewer_1") && strcmp(Session_elect, "Day_1") || str
     save(char(save_path), 'allParticipant')
     disp("You're done, yay!")
 end
-
 
 %% With time frequency and global field potential
 % Reviewer_1 & 2 day 2

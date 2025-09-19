@@ -1,16 +1,16 @@
 function [Peak_amp,Peak_index, n] = AutoCalcPeaks(CzAvg, times, Peak, frequencies, dat2plot_ITPC,...
     dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
     GFP_times, GFP_data, x_tf)
-if strcmp(Peak, "P1")
-    Lower = 411;
+if strcmp(Peak, "P1") % Set range to find P1 in the range of 32ms to 47ms post stim
+    Lower = 411; 
     Upper = 486;
-elseif strcmp(Peak, "P2")
+elseif strcmp(Peak, "P2") % Set range to find P2 in the range of 52ms to 67ms post stim
     Lower = 511;
     Upper = 586;
-elseif strcmp(Peak, "N1")
+elseif strcmp(Peak, "N1") % Set range to find N1 in the range of 47ms to 58ms post stim
     Lower = 486;
     Upper = 541;
-elseif strcmp(Peak, "N2")
+elseif strcmp(Peak, "N2") % Set range to find N2 in the range of 67ms to 88ms post stim
     Lower = 586;
     Upper = 691;
 end
@@ -31,9 +31,8 @@ Peak_index = times(Peak_indexframes); %figures out the corresponding time to the
 n = figure('units','normalized','outerposition',[0.3 0.04 0.5 0.96]);
 tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
 
-% "Phase locked"
+% First Tile: "Phase locked"
 ax1 =  nexttile;
-
 contourf(x_tf, frequencies, dat2plot_PhaseLocked,40,'linecolor', 'none')
 ylabel('Frequency')
 xlabel('Time (ms)')
@@ -44,7 +43,7 @@ c2 = colorbar;
 colormap("jet");
 c2.Label.String = string(cbar_label_PhaseLocked);
 
-% "ITPC"
+% Second tile: "ITPC"
 ax2 =  nexttile;
 contourf(x_tf, frequencies, dat2plot_ITPC,40,'linecolor', 'none')
 ylabel('Frequency')
@@ -56,7 +55,7 @@ c4 = colorbar;
 colormap("jet");
 c4.Label.String = string(cbar_label_ITPC)';
 
-% Global Field Potential
+% Third tile: Global Field Potential
 ax3 = nexttile;
 plot(GFP_times, GFP_data,'-k', 'LineWidth', 1.5)
 title("Global Field Potential")
@@ -64,7 +63,7 @@ xlim([-10 100]);
 xlabel('Time (ms)')
 ylabel('Amplitude (µV)')
 
-% Time domain average
+% Fourth tile: Time domain average
 ax4 = nexttile;
 %CzAvg_limits = CzAvg(201:751);
 plot(times, CzAvg,'-r', 'LineWidth', 1.5)

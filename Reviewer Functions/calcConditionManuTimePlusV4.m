@@ -2,17 +2,17 @@ function [Peak_time, Peak_amp] = calcConditionManuTimePlusV4(trace_x, trace_y, p
     dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC,...
     times, GFP_times, GFP_data, x_tf)
 
-% Select peak index
+% Select peak index for cross hairs to start at
 if strcmp(peak, "P1")
-    idx = 451;
+    idx = 451; % 40ms post stim
 elseif strcmp(peak, "P2")
-    idx = 576;
+    idx = 576; % 65ms post stim
 elseif strcmp(peak, "N1")
-    idx = 501;
+    idx = 501; % 50ms post stim
 elseif strcmp(peak, "N2")
-    idx = 626;
+    idx = 626; % 75ms post stim
 elseif strcmp(peak, "Onset")
-    idx = 401;
+    idx = 401; % 30ms posrt stim
 end
 
 restart = true;

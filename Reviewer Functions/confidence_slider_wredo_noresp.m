@@ -8,8 +8,6 @@ function [Confidence_val, redo] = confidence_slider_wredo_noresp()
     %   Confidence_val  Scalar in [0,1] from the slider
     %   redo            Logical flag: true if “Redo Trial” was clicked
 
-
-
 % --- now build the modal slider dialog ---
 f = figure('Units',       'normalized', ...
     'Position',    [0.7 0.42  0.27 0.18], ...  % [left bottom width height]

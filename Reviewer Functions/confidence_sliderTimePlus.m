@@ -1,8 +1,6 @@
 function [Confidence_val] = confidence_sliderTimePlus(CzAvg, x_tf, frequencies, dat2plot_ITPC,...
     dat2plot_PhaseLocked, color_edges_PhaseLocked, color_edges_ITPC, cbar_label_PhaseLocked, cbar_label_ITPC, times, GFP_times, GFP_data, Peak_time, Peak_amp)
 
-
-
 f1 = figure('units','normalized','outerposition',[0.2 0.04 0.5 0.96]);
 t = tiledlayout("vertical", "TileSpacing","tight", "Padding","tight");
 

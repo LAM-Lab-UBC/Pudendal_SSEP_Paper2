@@ -83,7 +83,6 @@ if strcmp(ProcessingTask_elect, "Process new data")
             Circ_elect = "No";
         end
 
-
         % Now loop through all trial files
         for i = 1:length(file_list)
             file_path = fullfile(participant_path, file_list(i).name);
@@ -102,8 +101,7 @@ if strcmp(ProcessingTask_elect, "Process new data")
             PT = inputdlg('Enter PT:', sprintf('Trial Number %s', fname), [1 50]);
             xPT_str = inputdlg('Enter xPT:', sprintf('Trial Number %s', fname), [1 50]);
             xPT = str2double(xPT_str{1});
-            
-
+           
             Participant.Participant_Info.Name = participant;
             Participant.Participant_Info.Sex = Sex_elect;
             Participant.Participant_Info.Circumsize = Circ_elect;
@@ -113,7 +111,6 @@ if strcmp(ProcessingTask_elect, "Process new data")
             Participant.Trial.xPT = xPT;
             % Continue only if valid trial and PT between 2 and 3
             if xPT >= 2 && xPT <= 3
-
 
                 % Load EEG data
                 EEG = pop_loadbv(participant_path, file_list(i).name);
@@ -549,7 +546,6 @@ elseif strcmp(ProcessingTask_elect, "Analyze data")
             end
             close all
             end 
-
 
             % Mark as analyzed by renaming the file
             [~, baseName, ext] = fileparts(file_path);
